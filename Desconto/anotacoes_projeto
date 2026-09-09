@@ -1,0 +1,39 @@
+Avaliação dos jogadores e do campo e solicitação de feedback (ex: tal convidade não é assíduo)
+
+1. Módulo de Reservas (Inspirado no Airbnb)
+Reserva por Slots Fracionados: Permitir agendamento por hora ou meio período, com precificação dinâmica (ex: horários de pico como 19h–21h em dias úteis são mais caros; horários ociosos ganham desconto automático).
+
+Dividir o Valor da Reserva (Split Payment): Em vez de uma única pessoa pagar tudo, o app gera um link de cobrança ou QR Code Pix compartilhado. O horário só fica 100% confirmado quando o valor total for atingido até uma data/hora limite.
+
+Política de Cancelamento e Calção: Regras claras de reembolso baseadas na antecedência do cancelamento, protegendo o dono da quadra/espaço contra horários vagos de última hora.
+
+Filtros Específicos por Modalidade: Filtros avançados para o tipo de piso (sintético, taco, areia, saibro), iluminação para jogos noturnos, presença de vestiário, churrasqueira ou estacionamento.
+
+2. Módulo de Formação de Times ("Matchmaking" Esportivo)Sistema de "Completar Time" (Mercenário / Free Agent): Se um time reservou a quadra, mas faltam 2 jogadores, eles podem abrir vagas públicas no aplicativo informando a posição necessária (ex: "precisa-se de 1 goleiro e 1 zagueiro").
+
+Nível de Habilidade Equivalente: Algoritmo simples de pareamento baseado no nível dos jogadores (Iniciante, Intermediário, Avançado) para evitar partidas desequilibradas.
+
+Checkout com Posicionamento: Ao entrar em uma partida, o jogador seleciona sua posição em um diagrama visual do campo/quadra.3. Confiabilidade, Engajamento e Gamificação
+
+Score de Assiduidade e Fair Play: Avaliação pós-jogo para classificar se o jogador compareceu no horário e se teve bom comportamento. Jogadores com alta taxa de cancelamento de última hora perdem prioridade em futuras vagas.
+
+Incentivo para Goleiros: Como goleiros costumam ser escassos em futebol amador, o sistema pode oferecer isenção de taxa ou créditos no app para quem jogar nessa posição.
+
+Ranking Local e Histórico: Estatísticas simples como número de partidas disputadas, vitórias e gols/pontos marcados.
+
+Validação de Identidade (Cadastro Seguro): Validação de conta via CPF, número de telefone e foto de perfil obrigatória.
+Integração com login de redes sociais para verificar histórico real.
+
+Sistema de Avaliação Pós-Jogo (Sistema de Reputação):
+Score de Fair Play (0 a 5 estrelas): Após a partida, os participantes avaliam uns aos outros em quesitos como Pontualidade, Espírito Esportivo e Nível Técnico Real.
+
+Tags de Perfil: Selos acumulativos concedidos pela comunidade, como "Joga Limpo", "Goleiro de Confiança", "Pontual".
+
+Banimento por "Furo": Quem confirma presença em uma vaga e não aparece sem avisar com antecedência perde pontos de reputação e fica bloqueado de entrar em novos jogos por X dias.
+
+Check-in por QR Code / Token: O jogador só é confirmado na partida e liberado para avaliação quando o organizador do jogo escaneia seu QR Code no local.
+
+Modo "Apenas Convidados" ou "Times Misto/Feminino": O organizador da partida pode filtrar quem pode ver/entrar na vaga. Exemplo: "Permitir apenas jogadores com nota de Fair Play acima de 4.5" ou criar partidas exclusivas para nichos específicos.
+
+Pagamento Antecipado em Custódia (Escrow): Em jogos pagos, a taxa do jogador fica "retida" no app. Se o jogador não comparecer, o valor é repassado ao organizador para cobrir o prejuízo da quadra.
+
