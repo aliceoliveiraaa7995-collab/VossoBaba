@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full bg-slate-950">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VossoBaba - O App Definitivo para o seu Baba</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .tactical-board {
+      background-color: #064e3b;
+      background-image: radial-gradient(#10b981 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+    .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: #0f172a; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+  </style>
+</head>
+<body class="text-slate-100 min-h-screen flex flex-col antialiased custom-scrollbar">
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast" class="fixed top-5 right-5 z-50 bg-emerald-500 text-slate-950 font-bold px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2 transition-all duration-300 opacity-0 pointer-events-none transform translate-y-[-20px]">
+    <i data-lucide="check-circle-2" class="w-5 h-5"></i>
+    <span id="toast-msg">Ação realizada com sucesso!</span>
+  </div>
+
+  <!-- HEADER / NAVBAR -->
+  <header class="bg-slate-900/90 backdrop-blur-md border-b border-slate-800 sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+      
+      <!-- LOGO VOSSOBABA VETORIAL INTEGRADO -->
+      <div class="flex items-center gap-3 cursor-pointer" onclick="switchTab('reservas')">
+        <div class="relative flex items-center justify-center">
+          <svg class="w-10 h-10 text-emerald-400 drop-shadow-[0_0_10px_rgba(52,211,153,0.5)]" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M50 5L90 25V75L50 95L10 75V25L50 5Z" stroke="currentColor" stroke-width="6" fill="#064e3b" fill-opacity="0.4"/>
+            <circle cx="50" cy="50" r="22" stroke="currentColor" stroke-width="5" fill="#0f172a"/>
+            <path d="M50 28V72M28 50H72" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="50" cy="50" r="6" fill="#34d399"/>
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-xl font-extrabold tracking-wider bg-gradient-to-r from-emerald-400 via-teal-300 to-amber-400 bg-clip-text text-transparent leading-none">VossoBaba</h1>
+          <span class="text-[10px] text-slate-400 font-semibold tracking-widest uppercase">Futebol & Resenha</span>
+        </div>
+      </div>
+
+      <!-- NAV TABS -->
+      <nav class="hidden md:flex gap-1 bg-slate-950 p-1.5 rounded-2xl border border-slate-800 text-xs font-semibold">
+        <button onclick="switchTab('reservas')" id="tab-reservas" class="px-4 py-2 rounded-xl bg-emerald-500 text-slate-950 shadow-lg font-bold transition">1. Campos Privados & Pix Split</button>
+        <button onclick="switchTab('matchmaking')" id="tab-matchmaking" class="px-4 py-2 rounded-xl text-slate-400 hover:text-white transition">2. Completar Baba</button>
+        <button onclick="switchTab('seguranca')" id="tab-seguranca" class="px-4 py-2 rounded-xl text-slate-400 hover:text-white transition">3. Confiabilidade</button>
+        <button onclick="switchTab('posjogo')" id="tab-posjogo" class="px-4 py-2 rounded-xl text-slate-400 hover:text-white transition">4. Avaliação & Furo</button>
+      </nav>
+
+      <!-- BOTÃO DE PERFIL -->
+      <button onclick="switchTab('perfil')" id="tab-perfil" class="flex items-center gap-3 bg-slate-800/80 hover:bg-slate-800 p-1.5 pr-3 rounded-2xl border border-slate-700 transition">
+        <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 text-slate-950 flex items-center justify-center font-black text-xs shadow">
+          LC
+        </div>
+        <div class="text-left hidden sm:block">
+          <p class="text-xs font-bold leading-tight text-white" id="nav-user-name">Lucas "Camisa 10"</p>
+          <p class="text-[10px] text-emerald-400 font-medium flex items-center gap-1">
+            <i data-lucide="shield-check" class="w-3 h-3"></i> Nível 4.9 • Pro
+          </p>
+        </div>
+      </button>
+    </div>
+  </header>
+
+  <!-- MOBILE NAV BAR -->
+  <div class="md:hidden bg-slate-900 border-b border-slate-800 p-2 flex justify-around text-[11px] text-slate-400 font-medium overflow-x-auto">
+    <button onclick="switchTab('reservas')" class="px-2 py-1">Campos</button>
+    <button onclick="switchTab('matchmaking')" class="px-2 py-1">Achar Baba</button>
+    <button onclick="switchTab('seguranca')" class="px-2 py-1">Segurança</button>
+    <button onclick="switchTab('posjogo')" class="px-2 py-1">Avaliação</button>
+    <button onclick="switchTab('perfil')" class="px-2 py-1 text-emerald-400 font-bold">Meu Perfil</button>
+  </div>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="max-w-7xl mx-auto px-4 py-6 flex-grow w-full">
+
+    <!-- TAB 1: RESERVAS E FILTROS -->
+    <section id="sec-reservas" class="space-y-6">
+      
+      <!-- BUSCA E FILTROS INTERATIVOS -->
+      <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 shadow-xl space-y-4">
+        <div class="flex justify-between items-center">
+          <h2 class="text-base font-bold flex items-center gap-2 text-emerald-400">
+            <i data-lucide="sliders-horizontal" class="w-5 h-5"></i> Encontrar Campo Privado
+          </h2>
+          <span class="text-xs text-slate-400" id="results-count">3 locais encontrados</span>
+        </div>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+          <div>
+            <label class="block text-slate-400 mb-1 font-medium">Nome ou Bairro</label>
+            <input type="text" id="filter-search" oninput="applyFilters()" placeholder="Ex: Arena, Pituba..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white focus:outline-none focus:border-emerald-500">
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1 font-medium">Tipo de Piso</label>
+            <select id="filter-piso" onchange="applyFilters()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white focus:outline-none focus:border-emerald-500">
+              <option value="todos">Todos os Pisos</option>
+              <option value="sintético">Sintético</option>
+              <option value="parquet">Parquet (Futsal)</option>
+              <option value="areia">Areia / Futevôlei</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1 font-medium">Modalidade</label>
+            <select id="filter-categoria" onchange="applyFilters()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white focus:outline-none focus:border-emerald-500">
+              <option value="todas">Todos os Campos Privados</option>
+              <option value="pago">Privados Pagos (Pix Split)</option>
+              <option value="cedido">Privados Cedidos (Gratuitos)</option>
+            </select>
+          </div>
+          <div class="flex items-end">
+            <button onclick="resetFilters()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold p-2.5 rounded-xl transition">
+              Limpar Filtros
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARDS DAS QUADRAS -->
+      <div id="quadras-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Injetado Dinamicamente via JS -->
+      </div>
+    </section>
+
+    <!-- TAB 2: MATCHMAKING E POSICIONAMENTO -->
+    <section id="sec-matchmaking" class="hidden space-y-6">
+      <div class="bg-gradient-to-r from-emerald-900 to-teal-950 p-6 rounded-2xl border border-emerald-800 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div>
+          <span class="bg-emerald-500/20 text-emerald-300 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase border border-emerald-500/30">Matchmaking em Tempo Real</span>
+          <h2 class="text-xl font-extrabold mt-1">Faltou jogador pro seu Baba?</h2>
+          <p class="text-xs text-slate-300 mt-1">Publique a vaga e encontre atletas compatíveis com a média de habilidade do seu grupo.</p>
+        </div>
+        <button onclick="openModalCreateMatch()" class="bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-extrabold text-xs px-5 py-3 rounded-xl transition shadow-lg shadow-emerald-500/20 whitespace-nowrap">
+          + Criar Novo Baba / Vaga
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Vagas Abertas -->
+        <div class="lg:col-span-2 space-y-4">
+          <h3 class="font-bold text-sm text-slate-300 flex items-center justify-between">
+            <span>Babas Precisando de Atletas</span>
+            <span class="text-xs text-emerald-400 font-normal" id="match-count">2 babas abertos</span>
+          </h3>
+          
+          <div id="matches-list" class="space-y-4">
+            <!-- Injetado dinamicamente via JS -->
+          </div>
+        </div>
+
+        <!-- Ranking de Assiduidade -->
+        <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 space-y-4 h-fit">
+          <h3 class="font-bold text-sm text-amber-400 flex items-center gap-2">
+            <i data-lucide="trophy" class="w-4 h-4"></i> Destaques do VossoBaba
+          </h3>
+          <p class="text-xs text-slate-400">Atletas mais assíduos e bem avaliados da comunidade local.</p>
+          
+          <div class="space-y-3 text-xs" id="ranking-list">
+            <!-- Injetado Dinamicamente -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: CONFIABILIDADE E SEGURANÇA -->
+    <section id="sec-seguranca" class="hidden space-y-6">
+      <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 space-y-6">
+        <div>
+          <h2 class="text-lg font-bold text-white flex items-center gap-2">
+            <i data-lucide="shield-check" class="w-6 h-6 text-emerald-400"></i> Protocolos de Segurança do VossoBaba
+          </h2>
+          <p class="text-xs text-slate-400 mt-1">Acabamos com calotes, furos sem aviso e brigas em campo.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+          <div class="p-4 border border-slate-800 bg-slate-950/50 rounded-xl space-y-2">
+            <i data-lucide="fingerprint" class="w-6 h-6 text-emerald-400"></i>
+            <h4 class="font-bold text-sm text-white">Identidade Validada</h4>
+            <p class="text-slate-400">Todo usuário precisa de validação por documento e foto real antes de ingressar em babas abertos.</p>
+          </div>
+          <div class="p-4 border border-slate-800 bg-slate-950/50 rounded-xl space-y-2">
+            <i data-lucide="vault" class="w-6 h-6 text-emerald-400"></i>
+            <h4 class="font-bold text-sm text-white">Custódia Pix (Escrow)</h4>
+            <p class="text-slate-400">A taxa do atleta convidado fica retida e só é repassada ao gestor do campo e organizador após a confirmação da partida.</p>
+          </div>
+          <div class="p-4 border border-slate-800 bg-slate-950/50 rounded-xl space-y-2">
+            <i data-lucide="qr-code" class="w-6 h-6 text-emerald-400"></i>
+            <h4 class="font-bold text-sm text-white">Check-in por QR Code</h4>
+            <p class="text-slate-400">A presença é confirmada na portaria ou recepção do campo privado escaneando o código gerado no app.</p>
+          </div>
+        </div>
+
+        <!-- Gerador de QR Code de Exemplo -->
+        <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 text-center space-y-3 max-w-sm mx-auto">
+          <h4 class="font-bold text-xs text-slate-300">Seu QR Code de Presença (Próximo Baba)</h4>
+          <div class="bg-white p-4 rounded-xl inline-block">
+            <div class="w-32 h-32 bg-slate-900 rounded-lg flex items-center justify-center text-emerald-400 font-mono text-[10px] p-2 text-center border-4 border-slate-950">
+              [QR-CODE-VOSSOBABA-4921]
+            </div>
+          </div>
+          <p class="text-[11px] text-slate-500">Apresente na recepção do campo ao chegar.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: AVALIAÇÃO E REPORT -->
+    <section id="sec-posjogo" class="hidden space-y-6">
+      <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 max-w-xl mx-auto space-y-5">
+        <div class="border-b border-slate-800 pb-3 flex justify-between items-center">
+          <div>
+            <h2 class="text-base font-bold text-white">Avaliação do Último Baba</h2>
+            <p class="text-xs text-slate-400">Baba das 20h • Arena Gol de Placa</p>
+          </div>
+          <span class="text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-bold px-2.5 py-1 rounded-full">Partida Encerrada</span>
+        </div>
+
+        <div class="space-y-4 text-xs">
+          <!-- Avaliar Atleta -->
+          <div class="p-4 border border-slate-800 bg-slate-950 rounded-xl space-y-3">
+            <div class="flex justify-between items-center">
+              <span class="font-bold text-slate-200">Atleta: Rodrigo "Zagueiro"</span>
+              <span class="text-amber-400 font-bold" id="rating-val">5.0 Estrelas</span>
+            </div>
+
+            <div class="flex gap-2 text-amber-400" id="star-rating">
+              <button onclick="setRating(1)"><i data-lucide="star" class="w-6 h-6 fill-amber-400"></i></button>
+              <button onclick="setRating(2)"><i data-lucide="star" class="w-6 h-6 fill-amber-400"></i></button>
+              <button onclick="setRating(3)"><i data-lucide="star" class="w-6 h-6 fill-amber-400"></i></button>
+              <button onclick="setRating(4)"><i data-lucide="star" class="w-6 h-6 fill-amber-400"></i></button>
+              <button onclick="setRating(5)"><i data-lucide="star" class="w-6 h-6 fill-amber-400"></i></button>
+            </div>
+
+            <div>
+              <label class="block text-slate-400 mb-1">Atribuir Destaque:</label>
+              <div class="flex gap-2 flex-wrap">
+                <button onclick="toggleTag(this)" class="tag-btn border border-slate-800 px-2.5 py-1 rounded-lg bg-slate-900 hover:border-emerald-500 transition">🛡️ Joga Limpo</button>
+                <button onclick="toggleTag(this)" class="tag-btn border border-slate-800 px-2.5 py-1 rounded-lg bg-slate-900 hover:border-emerald-500 transition">⚡ Raça Puro Sangue</button>
+                <button onclick="toggleTag(this)" class="tag-btn border border-slate-800 px-2.5 py-1 rounded-lg bg-slate-900 hover:border-emerald-500 transition">⚽ Toca e Sai</button>
+              </div>
+            </div>
+
+            <div class="pt-2 border-t border-slate-800 flex justify-between items-center">
+              <span class="text-red-400 font-medium">Atleta faltou sem avisar?</span>
+              <button onclick="reportFuro('Rodrigo Zagueiro')" class="bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 px-3 py-1.5 rounded-lg font-bold transition">
+                Denunciar Furo
+              </button>
+            </div>
+          </div>
+
+          <!-- Avaliar Quadra -->
+          <div class="p-4 border border-slate-800 bg-slate-950 rounded-xl space-y-3">
+            <span class="font-bold text-slate-200 block">Avaliar o Local (Arena Gol de Placa)</span>
+            <select id="quadra-feedback" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none">
+              <option>Grama e iluminação em perfeitas condições</option>
+              <option>Grama bastante desgastada / escorregadia</option>
+              <option>Iluminação fraca ou refletores queimados</option>
+            </select>
+          </div>
+
+          <button onclick="submitEvaluation()" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold py-3 rounded-xl transition shadow-lg">
+            Finalizar Avaliação & Ganhar Pontos
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 5: PERFIL DO USUÁRIO -->
+    <section id="sec-perfil" class="hidden space-y-6 max-w-3xl mx-auto">
+      <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 space-y-6">
+        <div class="flex flex-col sm:flex-row items-center gap-5 pb-6 border-b border-slate-800">
+          <div class="w-20 h-20 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-300 text-slate-950 flex items-center justify-center font-black text-2xl shadow-xl shadow-emerald-500/20">
+            LC
+          </div>
+          <div class="text-center sm:text-left space-y-1">
+            <div class="flex items-center justify-center sm:justify-start gap-2">
+              <h2 class="text-xl font-extrabold text-white" id="profile-name">Lucas "Camisa 10"</h2>
+              <span class="bg-emerald-500/20 text-emerald-400 text-[10px] font-bold px-2 py-0.5 rounded border border-emerald-500/30">VIP Pro</span>
+            </div>
+            <p class="text-xs text-slate-400" id="profile-pos">Posição Preferida: Meia-Atacante • Perna Boa: Direita</p>
+            <div class="flex gap-2 justify-center sm:justify-start pt-1 text-[11px]">
+              <span class="bg-slate-800 text-slate-300 px-2.5 py-0.5 rounded-full">⭐ 4.9 Fair Play</span>
+              <span class="bg-slate-800 text-slate-300 px-2.5 py-0.5 rounded-full">⚽ 28 Babas Disputados</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- FORMULÁRIO DE EDIÇÃO DO PERFIL -->
+        <form onsubmit="saveProfile(event)" class="space-y-4 text-xs">
+          <h3 class="font-bold text-sm text-slate-200">Editar Informações de Atleta</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-slate-400 mb-1 font-medium">Nome / Apelido</label>
+              <input type="text" id="edit-name" value="Lucas Camisa 10" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white focus:outline-none focus:border-emerald-500">
+            </div>
+            <div>
+              <label class="block text-slate-400 mb-1 font-medium">Posição Principal</label>
+              <select id="edit-pos" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white focus:outline-none focus:border-emerald-500">
+                <option value="Meia-Atacante">Meia-Atacante</option>
+                <option value="Goleiro">Goleiro</option>
+                <option value="Zagueiro / Fixo">Zagueiro / Fixo</option>
+                <option value="Atacante / Pivô">Atacante / Pivô</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-slate-400 mb-1 font-medium">Chave Pix para Reembolso</label>
+              <input type="text" value="lucas.camisa10@pix.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white focus:outline-none focus:border-emerald-500">
+            </div>
+            <div>
+              <label class="block text-slate-400 mb-1 font-medium">Nível Autoavaliado</label>
+              <select class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white focus:outline-none focus:border-emerald-500">
+                <option>Intermediário (Gosta de resenha e joga bem)</option>
+                <option>Avançado (Jogou na base / semi-pro)</option>
+                <option>Iniciante (Apenas pelo chopp no final)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- HISTÓRICO DE BADGES -->
+          <div class="pt-4 border-t border-slate-800 space-y-2">
+            <h4 class="font-bold text-slate-300">Medalhas do VossoBaba</h4>
+            <div class="flex gap-2 flex-wrap text-[11px]">
+              <span class="bg-amber-500/10 text-amber-400 border border-amber-500/20 px-3 py-1 rounded-xl">🧤 Goleiro Inimigo do Gol (10x)</span>
+              <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-3 py-1 rounded-xl">🤝 100% Assiduidade</span>
+              <span class="bg-blue-500/10 text-blue-400 border border-blue-500/20 px-3 py-1 rounded-xl">⚡ Rei do Pix Rápido</span>
+            </div>
+          </div>
+
+          <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold py-3 rounded-xl transition shadow-lg mt-4">
+            Salvar Alterações do Perfil
+          </button>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL: PIX SPLIT PAYMENT -->
+  <div id="modal-split" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4 z-50">
+    <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-2xl p-6 space-y-5 shadow-2xl">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+        <div>
+          <span class="text-[10px] text-emerald-400 font-bold uppercase">Divisão Inteligente</span>
+          <h3 class="font-bold text-base text-white" id="modal-quadra-title">Reservar Quadra</h3>
+        </div>
+        <button onclick="closeModal('modal-split')" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+
+      <div class="space-y-4 text-xs">
+        <div>
+          <label class="block text-slate-400 mb-1 font-medium">Quantidade de Atletas para Dividir</label>
+          <input type="number" id="split-count" value="12" min="1" max="22" oninput="recalculateSplit()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white font-bold text-sm focus:outline-none focus:border-emerald-500">
+        </div>
+
+        <div class="bg-slate-950 p-4 rounded-xl space-y-2 border border-slate-800">
+          <div class="flex justify-between text-slate-400">
+            <span>Aluguel da Quadra:</span>
+            <span class="font-bold text-white" id="split-total-val">R$ 0,00</span>
+          </div>
+          <div class="flex justify-between text-emerald-400 font-extrabold text-base pt-2 border-t border-slate-800">
+            <span>Sua cota Pix:</span>
+            <span id="split-per-val">R$ 0,00</span>
+          </div>
+        </div>
+
+        <div class="p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl text-[11px] text-amber-300 space-y-1">
+          <p class="font-bold">💡 Regra da Cautela VossoBaba:</p>
+          <p>O link do Pix será gerado. Cada atleta paga sua parte diretamente no app. Se atingir 80% do valor até 2h antes, o horário é garantido automaticamente.</p>
+        </div>
+      </div>
+
+      <button onclick="confirmPixSplit()" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold py-3 rounded-xl transition flex justify-center items-center gap-2 shadow-lg shadow-emerald-500/20 text-xs">
+        <i data-lucide="share-2" class="w-4 h-4"></i> Gerar Link Pix no Grupo
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL: POSICIONAMENTO TÁTICO -->
+  <div id="modal-tactical" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4 z-50">
+    <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-2xl p-6 space-y-4 shadow-2xl">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+        <div>
+          <h3 class="font-bold text-base text-white">Selecione sua Posição no Baba</h3>
+          <p class="text-xs text-slate-400">Escolha onde você vai jogar no esquema tático</p>
+        </div>
+        <button onclick="closeModal('modal-tactical')" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+
+      <!-- CAMPO DE FUTEBOL VISUAL -->
+      <div class="tactical-board h-72 rounded-2xl p-4 relative flex flex-col justify-between border-2 border-emerald-500/40 shadow-inner overflow-hidden">
+        <div class="w-28 h-6 border-2 border-white/60 mx-auto border-t-0 bg-white/5 rounded-b-lg"></div>
+
+        <div class="grid grid-cols-3 gap-2 text-center text-[10px] font-extrabold my-auto">
+          <button onclick="confirmPosition('Ataque / Pivô')" class="bg-slate-950/80 hover:bg-emerald-500 hover:text-slate-950 text-white border border-emerald-400/50 p-2.5 rounded-xl transition shadow">Ataque</button>
+          <button onclick="confirmPosition('Meio-Campo')" class="bg-slate-950/80 hover:bg-emerald-500 hover:text-slate-950 text-white border border-emerald-400/50 p-2.5 rounded-xl transition shadow">Meio</button>
+          <button onclick="confirmPosition('Zagueiro / Fixo')" class="bg-slate-950/80 hover:bg-emerald-500 hover:text-slate-950 text-white border border-emerald-400/50 p-2.5 rounded-xl transition shadow">Zagueiro</button>
+        </div>
+
+        <div class="text-center space-y-1">
+          <button onclick="confirmPosition('Goleiro (Grátis)')" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-black border border-white px-4 py-2 rounded-xl text-xs shadow-lg transition">
+            🧤 Goleiro (Isento de Taxa)
+          </button>
+          <div class="w-28 h-6 border-2 border-white/60 mx-auto border-b-0 bg-white/5 rounded-t-lg"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: CRIAR BABA -->
+  <div id="modal-create-match" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4 z-50">
+    <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-2xl p-6 space-y-4 shadow-2xl">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+        <h3 class="font-bold text-base text-white">Criar Vaga para Baba</h3>
+        <button onclick="closeModal('modal-create-match')" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+
+      <form onsubmit="submitNewMatch(event)" class="space-y-3 text-xs">
+        <div>
+          <label class="block text-slate-400 mb-1">Título do Baba</label>
+          <input type="text" id="new-match-title" required placeholder="Ex: Baba das 20h - Turma do Fogo" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white focus:outline-none focus:border-emerald-500">
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-slate-400 mb-1">Horário</label>
+            <input type="text" id="new-match-time" required placeholder="Hoje às 21:00" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white focus:outline-none focus:border-emerald-500">
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">Custo por Pessoa</label>
+            <input type="text" id="new-match-price" required placeholder="R$ 15,00" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white focus:outline-none focus:border-emerald-500">
+          </div>
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1">Posição Necessária</label>
+          <input type="text" id="new-match-pos" required placeholder="Ex: 1 Goleiro e 2 Zagueiros" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white focus:outline-none focus:border-emerald-500">
+        </div>
+
+        <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold py-3 rounded-xl transition shadow-lg mt-2">
+          Publicar Vaga no App
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- SCRIPT DE LÓGICA E ESTADO GLOBAL DA APLICAÇÃO -->
+  <script>
+    // DADOS MOCKADOS INICIAIS (Apenas Campos e Arenas Privadas)
+    let quadrasData = [
+      {
+        id: 1,
+        nome: "Arena Gol de Placa",
+        bairro: "Pituba",
+        piso: "sintético",
+        categoria: "pago",
+        preco: 200,
+        precoOriginal: 200,
+        isPico: true,
+        img: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=600&q=80",
+        rating: 4.9,
+        recursos: "Arena Privada • Sintético Premium • Vestiário LED"
+      },
+      {
+        id: 2,
+        nome: "Complexo Futsal Pro",
+        bairro: "Barris",
+        piso: "parquet",
+        categoria: "pago",
+        preco: 105,
+        precoOriginal: 150,
+        isDesconto: true,
+        img: "https://images.unsplash.com/photo-1529900748604-07564a03e7a6?auto=format&fit=crop&w=600&q=80",
+        rating: 4.8,
+        recursos: "Arena Privada • Piso Parquet Oficial • Desconto Ocioso"
+      },
+      {
+        id: 3,
+        nome: "Campo do Clube Social",
+        bairro: "Imbuí",
+        piso: "sintético",
+        categoria: "cedido",
+        preco: 0,
+        precoOriginal: 0,
+        isCedido: true,
+        img: "https://images.unsplash.com/photo-1517649763962-0c623266010b?auto=format&fit=crop&w=600&q=80",
+        rating: 4.7,
+        recursos: "Espaço Privado Cedido • Entrada Validade por QR Code"
+      }
+    ];
+
+    let matchesData = [
+      {
+        id: 1,
+        titulo: "Baba da Terça das 20h",
+        local: "Arena Gol de Placa",
+        horario: "Hoje às 20:00",
+        nivel: "Intermediário",
+        preco: "R$ 15,00",
+        vagas: "1 Goleiro e 1 Zagueiro"
+      },
+      {
+        id: 2,
+        titulo: "Futsal do Chopp",
+        local: "Complexo Futsal Pro",
+        horario: "Amanhã às 19:00",
+        nivel: "Avançado",
+        preco: "R$ 12,00",
+        vagas: "1 Fixo / Zagueiro"
+      }
+    ];
+
+    let rankingsData = [
+      { nome: "Marcos Paredão", pos: "Goleiro", jogos: 32, rating: "9.9" },
+      { nome: "Gabriel Silva", pos: "Meia-Atacante", jogos: 28, rating: "9.7" },
+      { nome: "Lucas Camisa 10", pos: "Meia", jogos: 24, rating: "4.9" }
+    ];
+
+    let selectedQuadraPrice = 0;
+    let selectedRating = 5;
+
+    // INICIALIZAÇÃO
+    window.onload = () => {
+      lucide.createIcons();
+      renderQuadras(quadrasData);
+      renderMatches();
+      renderRankings();
+    };
+
+    // TOAST NOTIFICAÇÃO
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toast-msg').innerText = msg;
+      toast.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-[-20px]');
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'pointer-events-none', 'translate-y-[-20px]');
+      }, 3000);
+    }
+
+    // ALTERNADOR DE ABAS
+    function switchTab(tabId) {
+      const tabs = ['reservas', 'matchmaking', 'seguranca', 'posjogo', 'perfil'];
+      tabs.forEach(t => {
+        document.getElementById(`sec-${t}`).classList.add('hidden');
+        const btn = document.getElementById(`tab-${t}`);
+        if(btn) btn.className = "px-4 py-2 rounded-xl text-slate-400 hover:text-white transition";
+      });
+
+      document.getElementById(`sec-${tabId}`).classList.remove('hidden');
+      const activeBtn = document.getElementById(`tab-${tabId}`);
+      if(activeBtn && tabId !== 'perfil') {
+        activeBtn.className = "px-4 py-2 rounded-xl bg-emerald-500 text-slate-950 font-bold shadow-lg transition";
+      }
+    }
+
+    // RENDERIZAR QUADRAS
+    function renderQuadras(data) {
+      const grid = document.getElementById('quadras-grid');
+      document.getElementById('results-count').innerText = `${data.length} locais encontrados`;
+      grid.innerHTML = '';
+
+      data.forEach(q => {
+        let badgeHtml = '';
+        if(q.isPico) badgeHtml = `<span class="bg-red-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full">Alta Demanda</span>`;
+        else if(q.isDesconto) badgeHtml = `<span class="bg-emerald-500 text-slate-950 text-[10px] font-extrabold px-2.5 py-1 rounded-full">30% OFF Ocioso</span>`;
+        else if(q.isCedido) badgeHtml = `<span class="bg-blue-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full">Privado Cedido</span>`;
+
+        let btnAction = q.isCedido 
+          ? `<button onclick="showToast('Acesso solicitado! Seu QR Code de entrada foi liberado.')" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs py-2.5 rounded-xl transition flex justify-center items-center gap-2"><i data-lucide="qr-code" class="w-4 h-4"></i> Check-in & QR Code de Entrada</button>`
+          : `<button onclick="openModalSplit('${q.nome}', ${q.preco})" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs py-2.5 rounded-xl transition flex justify-center items-center gap-2 shadow-lg shadow-emerald-500/10"><i data-lucide="credit-card" class="w-4 h-4"></i> Reservar Arena & Pix Split</button>`;
+
+        grid.innerHTML += `
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl flex flex-col justify-between hover:border-slate-700 transition">
+            <div>
+              <div class="relative h-44 bg-slate-800">
+                <img src="${q.img}" class="w-full h-full object-cover">
+                <div class="absolute top-3 right-3">${badgeHtml}</div>
+              </div>
+              <div class="p-4 space-y-2">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <h3 class="font-bold text-white text-base">${q.nome}</h3>
+                    <p class="text-xs text-slate-400">${q.bairro}</p>
+                  </div>
+                  <div class="text-right">
+                    <span class="text-lg font-black text-emerald-400">${q.preco > 0 ? 'R$ ' + q.preco : 'Grátis'}</span>
+                    ${q.precoOriginal > q.preco ? `<span class="text-[10px] text-slate-500 line-through block">R$ ${q.precoOriginal}</span>` : ''}
+                  </div>
+                </div>
+                <p class="text-xs text-slate-400">${q.recursos}</p>
+              </div>
+            </div>
+            <div class="p-4 pt-0">${btnAction}</div>
+          </div>
+        `;
+      });
+      lucide.createIcons();
+    }
+
+    // FILTROS
+    function applyFilters() {
+      const search = document.getElementById('filter-search').value.toLowerCase();
+      const piso = document.getElementById('filter-piso').value;
+      const cat = document.getElementById('filter-categoria').value;
+
+      const filtered = quadrasData.filter(q => {
+        const matchesSearch = q.nome.toLowerCase().includes(search) || q.bairro.toLowerCase().includes(search);
+        const matchesPiso = piso === 'todos' || q.piso === piso;
+        const matchesCat = cat === 'todas' || q.categoria === cat;
+        return matchesSearch && matchesPiso && matchesCat;
+      });
+
+      renderQuadras(filtered);
+    }
+
+    function resetFilters() {
+      document.getElementById('filter-search').value = '';
+      document.getElementById('filter-piso').value = 'todos';
+      document.getElementById('filter-categoria').value = 'todas';
+      renderQuadras(quadrasData);
+    }
+
+    // RENDERIZAR MATCHMAKING
+    function renderMatches() {
+      const list = document.getElementById('matches-list');
+      document.getElementById('match-count').innerText = `${matchesData.length} babas abertos`;
+      list.innerHTML = '';
+
+      matchesData.forEach(m => {
+        list.innerHTML += `
+          <div class="bg-slate-900 p-4 rounded-2xl border border-slate-800 space-y-3">
+            <div class="flex justify-between items-start">
+              <div>
+                <span class="text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded">${m.nivel}</span>
+                <h4 class="font-bold text-white text-base mt-1">${m.titulo}</h4>
+                <p class="text-xs text-slate-400">${m.local} • ${m.horario}</p>
+              </div>
+              <div class="text-right">
+                <span class="text-sm font-bold text-emerald-400">${m.preco}</span>
+                <span class="text-[10px] text-slate-500 block">Com Custódia</span>
+              </div>
+            </div>
+            <div class="flex justify-between items-center pt-2 border-t border-slate-800 text-xs">
+              <span class="text-slate-300 font-medium">Vagas: <b class="text-emerald-400">${m.vagas}</b></span>
+              <button onclick="openModalTactical()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-3 py-1.5 rounded-xl transition">
+                Escolher Posição
+              </button>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    // RENDERIZAR RANKINGS
+    function renderRankings() {
+      const list = document.getElementById('ranking-list');
+      list.innerHTML = '';
+      rankingsData.forEach((r, idx) => {
+        list.innerHTML += `
+          <div class="flex justify-between items-center p-2.5 bg-slate-950 rounded-xl border border-slate-800">
+            <div class="flex items-center gap-2">
+              <span class="font-black ${idx === 0 ? 'text-amber-400' : 'text-slate-500'}">#${idx + 1}</span>
+              <div>
+                <p class="font-bold text-white">${r.nome}</p>
+                <p class="text-[10px] text-slate-400">${r.pos} • ${r.jogos} jogos</p>
+              </div>
+            </div>
+            <span class="bg-emerald-500/20 text-emerald-400 font-bold px-2 py-0.5 rounded text-[10px]">${r.rating}</span>
+          </div>
+        `;
+      });
+    }
+
+    // MODAIS E AÇÕES
+    function openModalSplit(title, price) {
+      selectedQuadraPrice = price;
+      document.getElementById('modal-quadra-title').innerText = title;
+      document.getElementById('split-total-val').innerText = `R$ ${price.toFixed(2)}`;
+      recalculateSplit();
+      document.getElementById('modal-split').classList.remove('hidden');
+    }
+
+    function recalculateSplit() {
+      const count = parseInt(document.getElementById('split-count').value) || 1;
+      const perVal = selectedQuadraPrice / count;
+      document.getElementById('split-per-val').innerText = `R$ ${perVal.toFixed(2)}`;
+    }
+
+    function confirmPixSplit() {
+      closeModal('modal-split');
+      showToast('Link do Pix Split gerado! Copiado para a área de transferência.');
+    }
+
+    function openModalTactical() {
+      document.getElementById('modal-tactical').classList.remove('hidden');
+    }
+
+    function confirmPosition(pos) {
+      closeModal('modal-tactical');
+      showToast(`Vaga reservada para ${pos}! QR Code gerado.`);
+    }
+
+    function openModalCreateMatch() {
+      document.getElementById('modal-create-match').classList.remove('hidden');
+    }
+
+    function submitNewMatch(e) {
+      e.preventDefault();
+      const title = document.getElementById('new-match-title').value;
+      const time = document.getElementById('new-match-time').value;
+      const price = document.getElementById('new-match-price').value;
+      const pos = document.getElementById('new-match-pos').value;
+
+      matchesData.unshift({
+        id: Date.now(),
+        titulo: title,
+        local: "Arena Conveniada",
+        horario: time,
+        nivel: "Aberto",
+        preco: price,
+        vagas: pos
+      });
+
+      renderMatches();
+      closeModal('modal-create-match');
+      showToast('Novo Baba publicado com sucesso!');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.add('hidden');
+    }
+
+    // AVALIAÇÕES
+    function setRating(val) {
+      selectedRating = val;
+      document.getElementById('rating-val').innerText = `${val}.0 Estrelas`;
+      const stars = document.getElementById('star-rating').children;
+      for(let i = 0; i < 5; i++) {
+        if(i < val) stars[i].children[0].classList.add('fill-amber-400');
+        else stars[i].children[0].classList.remove('fill-amber-400');
+      }
+    }
+
+    function toggleTag(btn) {
+      btn.classList.toggle('bg-emerald-500/20');
+      btn.classList.toggle('border-emerald-500');
+    }
+
+    function reportFuro(nome) {
+      showToast(`Denúncia de "furo" registrada para ${nome}. Score atualizado.`);
+    }
+
+    function submitEvaluation() {
+      showToast('Avaliação enviada! Você ganhou +15 Pontos de Assiduidade.');
+      switchTab('matchmaking');
+    }
+
+    // SALVAR PERFIL
+    function saveProfile(e) {
+      e.preventDefault();
+      const name = document.getElementById('edit-name').value;
+      const pos = document.getElementById('edit-pos').value;
+
+      document.getElementById('profile-name').innerText = name;
+      document.getElementById('nav-user-name').innerText = name;
+      document.getElementById('profile-pos').innerText = `Posição Preferida: ${pos}`;
+
+      showToast('Perfil atualizado com sucesso!');
+    }
+  </script>
+</body>
+</html>
