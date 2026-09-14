@@ -35,5 +35,22 @@ Check-in por QR Code / Token: O jogador só é confirmado na partida e liberado 
 
 Modo "Apenas Convidados" ou "Times Misto/Feminino": O organizador da partida pode filtrar quem pode ver/entrar na vaga. Exemplo: "Permitir apenas jogadores com nota de Fair Play acima de 4.5" ou criar partidas exclusivas para nichos específicos.
 
-Pagamento Antecipado em Custódia (Escrow): Em jogos pagos, a taxa do jogador fica "retida" no app. Se o jogador não comparecer, o valor é repassado ao organizador para cobrir o prejuízo da quadra.
+
+2° dia 
+1. Política de Tolerância Zero para Atrasos e Limite de Confirmação (Módulo de Confiabilidade)
+Definição de um limite para o check-in presencial via QR Code (ex: até 10 minutos antes da partida). Caso o jogador não faça o check-in ou não sinalize atraso até o limite, a vaga abre automaticamente na lista de espera para convocação de um "Mercenário" presencial ou próximo.  
+
+2. Lista de Espera Automática com Notificação Push (Módulo de Matchmaking)
+Se um jogador desistir dentro do prazo permitido, o sistema aciona automaticamente a pessoa da fila de espera e cobra o valor da cota via Pix para garantir a vaga instantaneamente, sem que o organizador precise "adular" ninguém no WhatsApp.  
+
+3. Prancheta Tática e Algoritmo para Divisão Automática de Times (Módulo de Matchmaking)
+Um recurso onde o sistema sorteia as equipes do dia automaticamente considerando as posições cadastradas e a nota de nível técnico/reputação dos participantes, evitando perda de tempo no início do baba.  
+
+4. Isenção Flexível ou Cota Zero para Goleiros e Mimos (Módulo Financeiro)
+O requisito: Cota Zero / Rateio Fracionado Inteligente. 
+Permitir que o organizador marque a vaga de goleiro com custo R$ 0,00, redistribuindo o valor cobrado desse slot automaticamente entre os demais jogadores de linha. 
+
+5. Painel/Dashboard de Transparência do Caixa do Baba (Módulo de Gestão/Transparência)
+Uma aba onde todos os membros do grupo consigam visualizar quem já pagou a cota, o valor total arrecadado e o comprovante de repasse emitido para a quadra, garantindo total transparência e tirando a pressão das costas da diretoria.
+
 
